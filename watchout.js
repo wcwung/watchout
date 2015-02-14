@@ -12,6 +12,27 @@ var svgContainer = d3.select(".game-area").append("svg")
                                     .attr("height", 800)
                                     .style("background-color", "#f1f1f1");
 
+var highScore = d3.select(".scoreboard").append("div")
+                                        .attr("class", "high-score")
+                                        .text('High Score: ');
+
+var currentScore = d3.select(".scoreboard").append("div")
+                                        .attr("class", "current-score")
+                                        .text('Current Score: ');
+
+var collisions = d3.select(".scoreboard").append("div")
+                                        .attr("class", "collisions")
+                                        .text('Collision Count: ');
+
+var scoreTracker = {
+  highScore: 0,
+  currentScore: 0,
+  collisions: 0
+};
+
+d3.select(".collisions").append("span").text(0)
+                        .attr("class", "updateCollisions");
+
 //make it so that the enemies move to a new random location every second using...
 var makeEnemy = function(){
   svgContainer.append("circle")
@@ -28,6 +49,7 @@ for(var i = 0; i < 15; i++){
 //for each enemy apply a new location to move to every second
 d3.selectAll("circle").each(function(){
   var that = this;
+  var collisions = 0
 
   setInterval(function(){
     d3.select(that)
@@ -50,7 +72,12 @@ d3.selectAll("circle").each(function(){
     var enemyDistanceY = d3.select(".player").attr("cy") - d3.select(that).attr("cy");
     var enemyDistanceX = d3.select(".player").attr("cx") - d3.select(that).attr("cx");
 
-    if(Math.sqrt(Math.pow(enemyDistanceX, 2) + Math.pow(enemyDistanceY,2)) < 20) {
+
+
+    if(Math.sqrt(Math.pow(enemyDistanceX, 2) + Math.pow(enemyDistanceY,2)) < 25) {
+      scoreTracker.collisions++;
+      console.log(scoreTracker.collisions)
+      d3.select("span.updateCollisions").text(scoreTracker.collisions);
       console.log("HIT!!!");
     }
 
@@ -90,7 +117,20 @@ var drag = d3.behavior.drag()
 
 d3.select(".player").call(drag);
 //detect when an enemy touches you
-
-
+//done on line 42
 
 //keep track of the users's score and display it
+
+// setInterval(function(){
+//   var count = 0;
+//   d3.select("span.high-score-update").text(count);
+//   count++;
+//   console.log(count);
+// }, 100)
+
+
+
+
+
+
+
