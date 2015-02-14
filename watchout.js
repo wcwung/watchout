@@ -38,9 +38,9 @@ d3.selectAll("circle").each(function(){
   },1000 );
 });
 
-d3.selectAll("circle").each(function(){
+d3.selectAll("svg").each(function(){
   d3.select(this)
-    .append("svg:img")
+    .append("svg:image")
     .attr("width", 200)
     .attr("height", 200)
     .attr("xlink:src", "asteroid.png");
