@@ -15,13 +15,13 @@ var svgContainer = d3.select(".game-area").append("svg")
 //make it so that the enemies move to a new random location every second using...
 var makeEnemy = function(){
   svgContainer.append("circle")
-              // .style("fill", "transparent")
+              .attr("class", "enemy")
               .attr("cx", Math.random()*800)
               .attr("cy", Math.random()*800)
               .attr("r", 10);
 };
 
-for(var i = 0; i < 4; i++){
+for(var i = 0; i < 2; i++){
   makeEnemy();
 }
 
@@ -30,12 +30,30 @@ d3.selectAll("circle").each(function(){
   var that = this;
   setInterval( function(){
     d3.select(that)
-      .transition()
+      // .transition()
       .duration(1000)
       .ease("bounce")
       .attr("cx", Math.random()*800)
       .attr("cy", Math.random()*800);
   },1000 );
+  setInterval(function(){
+      //if you want to calc the distances
+      //subtract circle cy and player cy to get y
+      //subtract circle cx and player cx to get x
+      //
+      //if(Math.sqrt(y^2+x^2)) < 25px
+        //console.log('hit')
+    // console.log(d3.select(".player").attr("cy") - d3.select(".enemy").attr("cy"));
+    var enemyDistanceY = d3.select(".player").attr("cy") - d3.selectAll(".enemy").attr("cy");
+    var enemyDistanceX = d3.select(".player").attr("cx") - d3.selectAll(".enemy").attr("cx");
+    console.log("enemy-Y: " + enemyDistanceY);
+    console.log("enemy-X: " + enemyDistanceX);
+
+    if(Math.sqrt(Math.pow(enemyDistanceX, 2) + Math.pow(enemyDistanceY,2)) < 20) {
+      console.log("HIT!!!");
+    }
+
+  },2000);
 });
 
 d3.selectAll("svg").each(function(){
@@ -48,15 +66,18 @@ d3.selectAll("svg").each(function(){
 
 
 //make a differently colored dot to represent the player. Make it draggable.
+var player = {
+  x: 0,
+  y: 0
+}
 
 var makePlayer = function(){
   svgContainer.append("circle")
               .style("fill", "green")
               .attr("class", "player")
-              .attr("cx", 0)
-              .attr("cy", 0)
-              .attr("r", 10)
-              .attr("transform", "translate(" + 400 + "," + 400 + ")");
+              .attr("cx", 400)
+              .attr("cy", 400)
+              .attr("r", 10);
 };
 
 makePlayer();
@@ -67,9 +88,9 @@ var drag = d3.behavior.drag()
       var x = d3.event.x;
       var y = d3.event.y;
       d3.select(".player")
-        .attr("transform", "translate(" + x + "," + y + ")");
-console.log(d3.event.cy);
-    });
+        .attr("cx", x)
+        .attr("cy", y);
+});
 
 d3.select(".player").call(drag);
 //detect when an enemy touches you
