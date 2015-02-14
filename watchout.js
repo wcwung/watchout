@@ -30,6 +30,17 @@ var scoreTracker = {
   collisions: 0
 };
 
+d3.select(".high-score").append("span").text(0)
+                        .attr("class", "updateHighScore");
+
+d3.select(".current-score").append("span").text(0)
+                        .attr("class", "currentScore");
+
+setInterval(function(){
+  scoreTracker.currentScore++;
+  d3.select("span.currentScore").text(scoreTracker.currentScore);
+},100);
+
 d3.select(".collisions").append("span").text(0)
                         .attr("class", "updateCollisions");
 
@@ -76,8 +87,12 @@ d3.selectAll("circle").each(function(){
 
     if(Math.sqrt(Math.pow(enemyDistanceX, 2) + Math.pow(enemyDistanceY,2)) < 25) {
       scoreTracker.collisions++;
-      console.log(scoreTracker.collisions)
       d3.select("span.updateCollisions").text(scoreTracker.collisions);
+      if(scoreTracker.currentScore > scoreTracker.highScore){
+        scoreTracker.highScore = scoreTracker.currentScore;
+        d3.select("span.updateHighScore").text(scoreTracker.highScore);
+        scoreTracker.currentScore = 0;
+      }
       console.log("HIT!!!");
     }
 
