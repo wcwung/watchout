@@ -21,21 +21,24 @@ var makeEnemy = function(){
               .attr("r", 10);
 };
 
-for(var i = 0; i < 2; i++){
+for(var i = 0; i < 15; i++){
   makeEnemy();
 }
 
 //for each enemy apply a new location to move to every second
 d3.selectAll("circle").each(function(){
   var that = this;
-  setInterval( function(){
+
+  setInterval(function(){
     d3.select(that)
-      // .transition()
+      .transition()
       .duration(1000)
       .ease("bounce")
       .attr("cx", Math.random()*800)
       .attr("cy", Math.random()*800);
-  },1000 );
+      // console.log("OTHER CRICLE: ", d3.select("circle"));
+  },1000);
+
   setInterval(function(){
       //if you want to calc the distances
       //subtract circle cy and player cy to get y
@@ -44,16 +47,14 @@ d3.selectAll("circle").each(function(){
       //if(Math.sqrt(y^2+x^2)) < 25px
         //console.log('hit')
     // console.log(d3.select(".player").attr("cy") - d3.select(".enemy").attr("cy"));
-    var enemyDistanceY = d3.select(".player").attr("cy") - d3.selectAll(".enemy").attr("cy");
-    var enemyDistanceX = d3.select(".player").attr("cx") - d3.selectAll(".enemy").attr("cx");
-    console.log("enemy-Y: " + enemyDistanceY);
-    console.log("enemy-X: " + enemyDistanceX);
+    var enemyDistanceY = d3.select(".player").attr("cy") - d3.select(that).attr("cy");
+    var enemyDistanceX = d3.select(".player").attr("cx") - d3.select(that).attr("cx");
 
     if(Math.sqrt(Math.pow(enemyDistanceX, 2) + Math.pow(enemyDistanceY,2)) < 20) {
       console.log("HIT!!!");
     }
 
-  },2000);
+  },100);
 });
 
 d3.selectAll("svg").each(function(){
@@ -66,11 +67,6 @@ d3.selectAll("svg").each(function(){
 
 
 //make a differently colored dot to represent the player. Make it draggable.
-var player = {
-  x: 0,
-  y: 0
-}
-
 var makePlayer = function(){
   svgContainer.append("circle")
               .style("fill", "green")
